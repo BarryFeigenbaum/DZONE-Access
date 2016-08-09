@@ -36,7 +36,6 @@ The symbol will have exactly two letters. Both element name and symbol will cont
 Both the element name and the symbol will have their first letter capitalized, with the rest lowercase. (If you find that too challenging, it's okay to instead assume that both will be completely lowercase.)
 
 Examples
-C
 Zeddemorium, Zr -> true
 Venkmine, Kn -> true
 Stantzon, Zt -> false
@@ -49,7 +48,7 @@ Given an element name, find the number of distinct valid symbols for that name. 
  */
 
 /*
- * "Clean code" is an ambiguous term.  I can mean any of well written, most minimal, most readable, most changeable and more.  
+ * "Clean code" is an ambiguous term.  It can mean any of best style, most minimal, most readable, most changeable and more.  
  * I take it to mean easy to read and maintain and not trickiest/minimal code.
  * I also take it to mean not exploiting Java 8 features just to do that.
  */
@@ -80,7 +79,27 @@ public class TableOfElements {
         }
         return result;
     }
+    
+    /**
+     * Get first symbol for an element.
+     * 
+     * @param name element name
+     * @return first symbol
+     */
+    public static String getFirstSymbol(String name) {
+        return getAllSymbols(name).iterator().next();
+    }
 
+    /**
+     * Get the count of symbols for an element.
+     * 
+     * @param name element name
+     * @return number of possible symbols
+     */
+    public static int getSymbolCount(String name) {
+        return getAllSymbols(name).size();
+    }
+    
     /**
      * Get all symbols for a name.
      * 
@@ -91,7 +110,7 @@ public class TableOfElements {
     public static Set<String> getAllSymbols(String name) {
         validateGetAllSymbolsArguments(name);
         name = name.toLowerCase();
-        Set<String> result = new TreeSet<>();
+        Set<String> result = new TreeSet<>();  // sorts values
         addSymbols(name.substring(0, 1), name.substring(1), result);
         return result;
     }
@@ -160,11 +179,11 @@ public class TableOfElements {
         }
     }
 
-    private static int numberOfFAILs;
+    private static int numberOfFails;
 
     private static void addFail(boolean pass) {
         if (!pass) {
-            numberOfFAILs++;
+            numberOfFails++;
         }
     }
 
@@ -190,15 +209,14 @@ public class TableOfElements {
      * Test method.
      */
     private static void testFirstAndLength(String testName, String expected, int length) {
-        Set<String> symbols = getAllSymbols(testName);
-        String first = symbols.iterator().next();
+        String first = getFirstSymbol(testName);
         boolean pass1 = first.equals(expected);
         addFail(pass1);
         System.out.printf("%s: first alphabetical symbol %s = %s%n", (pass1 ? "PASS" : "FAIL"), testName, first);
         if (length > 0) {
-            boolean pass2 = symbols.size() == length;
+            boolean pass2 = getSymbolCount(testName) == length;
             addFail(pass2);
-            System.out.printf("%s: number of variants of %s == %d %s%n", (pass2 ? "PASS" : "FAIL"), testName, length, symbols);
+            System.out.printf("%s: number of variants of %s == %d %s%n", (pass2 ? "PASS" : "FAIL"), testName, length, getAllSymbols(testName));
         }
     }
 
@@ -244,7 +262,7 @@ public class TableOfElements {
             testFirst("Gozerium", "Ei");
             testFirst("Slimyrine", "Ie");
 
-            System.out.printf("Number of fails: %d%n", numberOfFAILs);
+            System.out.printf("Number of fails: %d%n", numberOfFails);
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
